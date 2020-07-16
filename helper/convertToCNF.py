@@ -23,19 +23,16 @@ def simplify(root):
     return root
 
 
-def convert_to_cnf(sentences):
-    sentence_trees = []
+def convert_to_cnf(expressions):
     modified_sentences = []
-    for i in range(len(sentences)):
-        temp_string = sentences[i]
-        temp_string = in_to_post(temp_string)
-        # print("PostFix form : ", temp_string)
+    for expression in expressions:
         expr_tree = BinaryTree()
-        root = expr_tree.make_tree(temp_string)
+        root = expr_tree.make_tree(expression)
         root = convert_to_nnf(root)
         root = simplify(root)
         roots = expr_tree.divide_tree(root)
+
         for root in roots:
             modified_sentences.append(expr_tree.generate_expr(root))
-        sentence_trees.append(root)
-    return sentence_trees, modified_sentences
+
+    return modified_sentences

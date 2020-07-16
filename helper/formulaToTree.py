@@ -1,42 +1,39 @@
-from globalvars import OPERATORS as OP
+from globalvars import OPERATORS
 
 
 class BinaryTreeNode:
     def __init__(self, c):
         self.data = c
-        self.isOperator = True if c in OP else False
+        self.isOperator = True if c in OPERATORS else False
         self.left = None
         self.right = None
 
 
 class BinaryTree:
     def __init__(self):
-        self.stack = []
+        pass
 
     def make_tree(self, formula):
-        for x in formula:
-            if x in OP:
-                if x == '!':
-                    node = BinaryTreeNode(x)
-                    node.right = self.stack.pop()
-                    self.stack.append(node)
-                else:
-                    node = BinaryTreeNode(x)
-                    q = self.stack.pop()
-                    p = self.stack.pop()
-                    node.left = p
-                    node.right = q
-                    self.stack.append(node)
+        x = formula[0]
+        if x in OPERATORS:
+            if x == '!':
+                node = BinaryTreeNode(x)
+                node.right = self.make_tree(formula[1])
             else:
                 node = BinaryTreeNode(x)
-                self.stack.append(node)
-        return self.stack[-1]
+                p = self.make_tree(formula[1])
+                q = self.make_tree(formula[2])
+                node.left = p
+                node.right = q
+        else:
+            node = BinaryTreeNode(x)
+        return node
 
     def generate_expr(self, root: BinaryTreeNode):
         if not root:
             return ""
         else:
-            if root.data in OP:
+            if root.data in OPERATORS:
                 result = ""
                 # result += "("
                 result += self.generate_expr(root.left)
